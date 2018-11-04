@@ -3,18 +3,18 @@ import numpy as np
 from player import Player
 
         
-#import Pyro4
+import Pyro4
 
 
-#@Pyro4.expose
-#@Pyro4.behavior(instance_mode="single")
+@Pyro4.expose
+@Pyro4.behavior(instance_mode="single")
 class Servidor(object):
     def __init__(self):
         self.players=list()
         print("Servidor Iniciado!")
 
-    def conectaPlayer(self,nome,skin):
-        player = Player(nome,skin,len(self.players)+1)
+    def conectaPlayer(self,nome,imgP,rectP):
+        player = Player(nome,len(self.players)+1,imgP,rectP)
         self.players.append(player)
         return player.getID()
 
@@ -22,7 +22,10 @@ class Servidor(object):
         for player in self.players:
             if player.getID()==id:
                 return player
-
+            
+    def getQuantPlayers(self):
+        return len(self.players)
+        
     def atualizaPlayer(self,id,player):
         contador = 0
         for player in self.players:
@@ -33,7 +36,7 @@ class Servidor(object):
 
             contador=contador+1
 
-'''   
+   
 def main():
     Pyro4.Daemon.serveSimple(
         {
@@ -45,7 +48,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-        '''
+        
 
     
 
