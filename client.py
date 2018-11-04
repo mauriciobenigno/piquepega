@@ -1,5 +1,5 @@
 import sys
-#import Pyro4
+import Pyro4
 #import Pyro4.util
 import pygame
 import server
@@ -8,8 +8,9 @@ from player import Player
 
 #sys.excepthook = Pyro4.util.excepthook
 
-#servidor = Pyro4.Proxy("PYRONAME:example.warehouse")
-
+servidor = Pyro4.Proxy("PYRONAME:example.warehouse")
+# print("servidor: " + str(objServidor))
+print("qtd Players: " + str(servidor.getQuantPlayers()))
 
 # Informações iniciais
 nome = input("Nome: ")
@@ -18,8 +19,8 @@ clock = pygame.time.Clock()
 tela = pygame.display.set_mode((800, 600))
 preto = (0, 0, 0) #RGB: preto == 0R, 0G, 0B
 
-#Servidor
-servidor = Servidor()
+# Servidor
+# servidor = Servidor()
 
 #Personagem
 imgPersonagem = pygame.image.load("imagens/Rocket.png")
@@ -29,7 +30,7 @@ rectPersonagem = imgPersonagem.get_rect()
 imgPersonagem2 = pygame.image.load("imagens/Rocket.png")
 imgPersonagem2 = pygame.transform.scale(imgPersonagem, (200,100))
 rectPersonagem2 = imgPersonagem.get_rect()
-
+# print("qtd Players: " + str(servidor.getQuantPlayers()))
 id2 = servidor.conectaPlayer("Mau2",imgPersonagem,rectPersonagem)
 id2 = servidor.conectaPlayer("Mau2",imgPersonagem,rectPersonagem)
 id2 = servidor.conectaPlayer("Mau2",imgPersonagem2,rectPersonagem2)
