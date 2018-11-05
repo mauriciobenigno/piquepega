@@ -4,6 +4,7 @@ from player import Player
 
         
 import Pyro4
+import Pyro4.naming
 
 
 @Pyro4.expose
@@ -43,8 +44,6 @@ def main():
             Servidor: "example.warehouse"
         },
         ns=True)
-   
-
 
 if __name__ == "__main__":
     main()
