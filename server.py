@@ -1,7 +1,7 @@
 import sys
+import json
 import numpy as np
 from player import Player
-
         
 import Pyro4
 import Pyro4.naming
@@ -14,27 +14,28 @@ class Servidor(object):
         self.players=list()
         print("Servidor Iniciado!")
 
-    def conectaPlayer(self,nome,imgP,rectP):
-        player = Player(nome,len(self.players)+1,imgP,rectP)
+    def conectaPlayer(self,nome,txtImg,txtCord,coordX,coordY):
+        player = Player(nome,len(self.players),txtImg,txtCord,coordX,coordY)
         self.players.append(player)
         return player.getID()
 
     def getPlayer(self,id):
         for player in self.players:
             if player.getID()==id:
-                return player
+                return player.getTudo()
+                #return player
             
     def getQuantPlayers(self):
         return len(self.players)
         
-    def atualizaPlayer(self,id,player):
+    def atualizaPlayer(self,id,playerL):
         contador = 0
+        playerN = Player(playerL[0],playerL[1],playerL[5],playerL[6],playerL[7],playerL[8])
         for player in self.players:
             if player.getID()==id:
                 del self.players[contador]
-                self.players.insert(contador, player)
+                self.players.insert(contador, playerN)
                 break
-
             contador=contador+1
 
    

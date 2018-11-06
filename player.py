@@ -2,15 +2,19 @@ import numpy as np
 import pygame
 
 class Player:
-    def __init__(self,nome,id,imgPlayer,rectPlayer):
+    def __init__(self,nome,id,txtImg,txtRect,coordX,coordY):
         self.nome=nome
         self.id=id
         self.status=False
         self.vidas=3
         self.velocidade=5
-        self.imgPlayer=imgPlayer
-        self.rectPlayer=rectPlayer
-        
+        self.txtImg=txtImg
+        self.txtRect=txtRect
+        self.coordX=coordX;
+        self.coordY=coordY
+
+    def getTudo(self):
+        return [self.nome,self.id,self.status,self.vidas,self.velocidade,self.txtImg,self.txtRect,self.coordX,self.coordY]    
 
     def setStatus(self,status):
         self.status=status
@@ -21,11 +25,15 @@ class Player:
     def setVidas(self,vidas):
         self.vidas=vidas
         
-    def setImgPlayer(self,imgPlayer):
-        self.imgPlayer=imgPlayer
+    def setImg(self,txtImg):
+        self.txtImg=txtImg
         
-    def setRectPlayer(self,rectPlayer):
-        self.rectPlayer=rectPlayer
+    def setRect(self,txtRect):
+        self.txtRect=txtRect
+
+    def setCoords(self,coordX,coordY):
+        self.coordX=coordX;
+        self.coordY=coordY;
 
     def getNome(self):
         return self.nome
@@ -39,13 +47,19 @@ class Player:
     def getID(self):
         return self.id
     
-    def getImgPlayer(self):
-        return self.imgPlayer
+    def getImg(self):
+        return self.txtImg
 
-    def getRectPlayer(self):
-        return self.rectPlayer
+    def getRect(self):
+        return self.txtRect
 
     def getVelocidade(self):
         return self.velocidade
+
+    def getCoordX(self):
+        return self.coordX;
+    
+    def getCoordY(self):
+        return self.coordY;
     
 
