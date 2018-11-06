@@ -25,11 +25,6 @@ imgPersonagem = pygame.image.load(txtImgLoad)
 imgPersonagem = pygame.transform.scale(imgPersonagem, txtRect)
 rectPersonagem = imgPersonagem.get_rect()
 
-imgPersonagem2 = pygame.image.load(txtImgLoad)
-imgPersonagem2 = pygame.transform.scale(imgPersonagem2, txtRect)
-rectPersonagem2 = imgPersonagem2.get_rect()
-# print("qtd Players: " + str(servidor.getQuantPlayers()))
-id2 = servidor.conectaPlayer("Mau3",txtImgLoad,txtRect,0.0,0.0)
 id = servidor.conectaPlayer("Mau",txtImgLoad,txtImgLoad,0.0,0.0)
 
 print("qtd Players: " + str(servidor.getQuantPlayers()))
@@ -38,12 +33,8 @@ print("qtd Players: " + str(servidor.getQuantPlayers()))
 playerL = servidor.getPlayer(id)
 player = Player(playerL[0],playerL[1],playerL[5],playerL[6],playerL[7],playerL[8])
 player.setNome("Beta")
-playerL = servidor.getPlayer(id2)
-player2 = Player(playerL[0],playerL[1],playerL[5],playerL[6],playerL[7],playerL[8])
-player2.setNome("Alfa")
 
 servidor.atualizaPlayer(id,player.getTudo())
-servidor.atualizaPlayer(id2,player2.getTudo())
 
 print(player.getNome())
 
@@ -70,18 +61,6 @@ while True:
     servidor.atualizaPlayer(id,playerL)
 
     print(" Coord "+str(rectPersonagem.x)+ " "+str(rectPersonagem.y))
-
-    '''if tecla[pygame.K_l]:
-        rectPersonagem2.move_ip(player2.getVelocidade(), 0)
-    if tecla[pygame.K_j]:
-        rectPersonagem2.move_ip(-player2.getVelocidade(), 0)
-    if tecla[pygame.K_i]:
-        rectPersonagem2.move_ip(0, -player2.getVelocidade())
-    if tecla[pygame.K_k]:
-        rectPersonagem2.move_ip(0, player2.getVelocidade())
-
-    #player.setCoords(rectPersonagem2.x,rectPersonagem2.y)
-    #servidor.atualizaPlayer(id2,player2)'''
 
     
     #Desenho do background
@@ -112,7 +91,7 @@ while True:
                     servidor.atualizaPlayer(id2,player2)'''
 
     tela.blit(imgPersonagem, rectPersonagem)
-    #tela.blit(imgPersonagem2, rectPersonagem2)
+
     
     pygame.display.update()
     clock.tick(30)
