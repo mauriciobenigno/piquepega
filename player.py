@@ -11,7 +11,7 @@ class Player:
         self.txtImg=txtImg
         self.txtRect=txtRect
         self.coordX=coordX;
-        self.coordY=coordY
+        self.coordY=coordY;
 
     def getTudo(self):
         return [self.nome,self.id,self.status,self.vidas,self.velocidade,self.txtImg,self.txtRect,self.coordX,self.coordY]    

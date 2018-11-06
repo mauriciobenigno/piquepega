@@ -20,16 +20,16 @@ preto = (0, 0, 0) #RGB: preto == 0R, 0G, 0B
 
 #Personagem
 txtImgLoad = "imagens/Rocket.png"
-txtCords = (200,100)
+txtRect = (200,100)
 imgPersonagem = pygame.image.load(txtImgLoad)
-imgPersonagem = pygame.transform.scale(imgPersonagem, txtCords)
+imgPersonagem = pygame.transform.scale(imgPersonagem, txtRect)
 rectPersonagem = imgPersonagem.get_rect()
 
 imgPersonagem2 = pygame.image.load(txtImgLoad)
-imgPersonagem2 = pygame.transform.scale(imgPersonagem2, txtCords)
+imgPersonagem2 = pygame.transform.scale(imgPersonagem2, txtRect)
 rectPersonagem2 = imgPersonagem2.get_rect()
 # print("qtd Players: " + str(servidor.getQuantPlayers()))
-id2 = servidor.conectaPlayer("Mau3",txtImgLoad,txtCords,0.0,0.0)
+id2 = servidor.conectaPlayer("Mau3",txtImgLoad,txtRect,0.0,0.0)
 id = servidor.conectaPlayer("Mau",txtImgLoad,txtImgLoad,0.0,0.0)
 
 print("qtd Players: " + str(servidor.getQuantPlayers()))
@@ -65,10 +65,13 @@ while True:
     if tecla[pygame.K_s]:
         rectPersonagem.move_ip(0, player.getVelocidade())
     # Atualizando as coordenadas
-    #player.setCoords(rectPersonagem.x,rectPersonagem.y)
-    #servidor.atualizaPlayer(id,player)
+    player.setCoords(rectPersonagem.x,rectPersonagem.y)
+    playerL = player.getTudo()
+    servidor.atualizaPlayer(id,playerL)
 
-    if tecla[pygame.K_l]:
+    print(" Coord "+str(rectPersonagem.x)+ " "+str(rectPersonagem.y))
+
+    '''if tecla[pygame.K_l]:
         rectPersonagem2.move_ip(player2.getVelocidade(), 0)
     if tecla[pygame.K_j]:
         rectPersonagem2.move_ip(-player2.getVelocidade(), 0)
@@ -78,20 +81,23 @@ while True:
         rectPersonagem2.move_ip(0, player2.getVelocidade())
 
     #player.setCoords(rectPersonagem2.x,rectPersonagem2.y)
-    #servidor.atualizaPlayer(id2,player2)
+    #servidor.atualizaPlayer(id2,player2)'''
 
     
     #Desenho do background
     tela.fill(preto)
-    '''   
+       
     for i in range(servidor.getQuantPlayers()):
-
-        jogadorAux = servidor.getPlayer(i+1)
-        imgPAux=jogadorAux.getImgPlayer()
-        rectPAux=jogadorAux.getRectPlayer()
-        tela.blit(imgPAux, rectPAux)
-
-    if player.getStatus() == True:
+        if i != id:
+            oPlayers = servidor.getPlayer(i)
+            imgJog = pygame.image.load(oPlayers[5])
+            imgJog = pygame.transform.scale(imgJog,txtRect)
+            rectJogs = imgJog.get_rect()
+            rectJogs.x=oPlayers[7]
+            rectJogs.y=oPlayers[8]
+            tela.blit(imgJog, rectJogs)
+            
+    '''if player.getStatus() == True:
         for i in range(servidor.getQuantPlayers()):
             if i != id:
                 #jogadorAux = servidor.getPlayer(i+1)
@@ -106,7 +112,7 @@ while True:
                     servidor.atualizaPlayer(id2,player2)'''
 
     tela.blit(imgPersonagem, rectPersonagem)
-    tela.blit(imgPersonagem2, rectPersonagem2)
+    #tela.blit(imgPersonagem2, rectPersonagem2)
     
     pygame.display.update()
     clock.tick(30)
