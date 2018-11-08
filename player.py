@@ -7,7 +7,7 @@ class Player:
         self.id=id
         self.status=False
         self.vidas=3
-        self.velocidade=5
+        self.velocidade=3
         self.txtImg=txtImg
         self.txtRect=txtRect
         self.coordX=coordX;
@@ -28,8 +28,15 @@ class Player:
     def setImg(self,txtImg):
         self.txtImg=txtImg
         
-    def setRect(self,txtRect):
+    def setRect(self,txtImg,txtRect):
         self.txtRect=txtRect
+
+    def setImgRect(self,txtImg,txtRect):
+        self.txtImg=txtImg
+        self.txtRect=txtRect
+        
+    def setVelocidade(self,velocidade):
+        self.velocidade=velocidade
 
     def setCoords(self,coordX,coordY):
         self.coordX=coordX;
