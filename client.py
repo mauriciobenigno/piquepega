@@ -11,12 +11,23 @@ servidor = Pyro4.Proxy("PYRONAME:example.warehouse")
 # print("servidor: " + str(objServidor))
 
 
+
+
 # Informações iniciais
 nome = input("Nome: ")
 pygame.init()
 clock = pygame.time.Clock()
 tela = pygame.display.set_mode((800, 600))
 preto = (0, 0, 0) #RGB: preto == 0R, 0G, 0B
+
+# Texto Nomes
+fonte = pygame.font.SysFont("arial", 10)
+fonte2 = pygame.font.SysFont("arial", 60)
+nickName = None
+
+# Sons de fundo
+pygame.mixer.music.load("sons/sbb416.mp3")
+pygame.mixer.music.play(loops = -1)
 
 #Personagem
 txtImgLoad = "imagens/Rocket.png"
@@ -33,6 +44,7 @@ print("qtd Players: " + str(servidor.getQuantPlayers()))
 playerL = servidor.getPlayer(id)
 player = Player(playerL[0],playerL[1],playerL[5],playerL[6],playerL[7],playerL[8])
 player.setNome("Beta")
+player.setStatus(True)
 
 servidor.atualizaPlayer(id,player.getTudo())
 
@@ -59,9 +71,6 @@ while True:
     player.setCoords(rectPersonagem.x,rectPersonagem.y)
     playerL = player.getTudo()
     servidor.atualizaPlayer(id,playerL)
-
-    print(" Coord "+str(rectPersonagem.x)+ " "+str(rectPersonagem.y))
-
     
     #Desenho do background
     tela.fill(preto)
@@ -75,25 +84,20 @@ while True:
             rectJogs.x=oPlayers[7]
             rectJogs.y=oPlayers[8]
             tela.blit(imgJog, rectJogs)
-            
-    '''if player.getStatus() == True:
-        for i in range(servidor.getQuantPlayers()):
-            if i != id:
-                #jogadorAux = servidor.getPlayer(i+1)
-                #rectPAux=jogadorAux.getRectPlayer()
-                #if rectPersonagem.colliderect(rectPAux):
-                if rectPersonagem.colliderect(rectPersonagem2):
-                    player.setStatus(False)
-                    player2.setStatus(True)
-                    player2.setVida(player2.getVida()-1)
-                    
-                    servidor.atualizaPlayer(id,player)
-                    servidor.atualizaPlayer(id2,player2)'''
+            '''if player.getStatus() == True:
+                if rectPersonagem.colliderect(rectJogs):
+                    nickname = fonte.render(str("COLISAO"), True, (255,0,0))
+                    tela.blit(nickname, rectPersonagem)'''
+ 
 
     tela.blit(imgPersonagem, rectPersonagem)
 
+
+    # Mostrar nome
+    nickname = fonte.render(str(nome), True, (0,255,0))
+    tela.blit(nickname, rectPersonagem)
     
     pygame.display.update()
-    clock.tick(30)
+    clock.tick(60)
 
 pygame.quit ()
