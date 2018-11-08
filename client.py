@@ -84,10 +84,10 @@ while True:
             rectJogs.x=oPlayers[7]
             rectJogs.y=oPlayers[8]
             tela.blit(imgJog, rectJogs)
-            '''if player.getStatus() == True:
+            if player.getStatus() == True:
                 if rectPersonagem.colliderect(rectJogs):
                     nickname = fonte.render(str("COLISAO"), True, (255,0,0))
-                    tela.blit(nickname, rectPersonagem)'''
+                    tela.blit(nickname, rectPersonagem)
  
 
     tela.blit(imgPersonagem, rectPersonagem)
