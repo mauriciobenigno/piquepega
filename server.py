@@ -12,6 +12,21 @@ import Pyro4.naming
 class Servidor(object):
     def __init__(self):
         self.players=list()
+        self.obstaculos=list()
+        # paredes
+        self.idPegador=None
+        #self.obstaculos.append()
+
+        # obstaculos
+        self.obstaculos.append((72,91))
+        self.obstaculos.append((72,196))
+        self.obstaculos.append((72,265))
+        self.obstaculos.append((72,370))
+        self.obstaculos.append((72,475))
+        self.obstaculos.append((177,475))
+        self.obstaculos.append((177,337))
+
+        # mensagem ok
         print("Servidor Iniciado!")
 
     def conectaPlayer(self,nome,txtImg,txtCord,coordX,coordY):
@@ -31,12 +46,23 @@ class Servidor(object):
     def atualizaPlayer(self,id,playerL):
         contador = 0
         playerN = Player(playerL[0],playerL[1],playerL[5],playerL[6],playerL[7],playerL[8])
+        if id == self.idPegador:
+            playerN.setStatus(True)
+        playerN.setVidas(playerL[3])
+        playerN.setVelocidade(playerL[4])
         for player in self.players:
             if player.getID()==id:
                 del self.players[contador]
                 self.players.insert(contador, playerN)
                 break
             contador=contador+1
+            
+    def getObstaculos(self):
+        return self.obstaculos
+
+    def setPegador(self,idP):
+        self.idPegador=idP
+        
 
    
 def main():
