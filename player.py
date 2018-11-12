@@ -7,7 +7,7 @@ class Player:
         self.id=id
         self.status=False
         self.vidas=3
-        self.velocidade=3
+        self.velocidade=5
         self.txtImg=txtImg
         self.txtRect=txtRect
         self.coordX=coordX;

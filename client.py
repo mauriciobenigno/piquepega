@@ -4,7 +4,17 @@ import pygame
 import server
 from server import Servidor
 from player import Player
+from random import randint
+'''
+->Adicionar<-
+1 - Ao passar por cima de um corpo morto, ficar lento até sair dele
+2 - Player amarelo deleta o bonus do player vermelho
+3 - Player que desconecta, vira morto
+4 - Player pegador que desconecta, sorteia novo pegador
+5 - Mudar nome pegador para infectado
+6 - criar imagem de cerebro para bonus
 
+'''
 #sys.excepthook = Pyro4.util.excepthook
 
 servidor = Pyro4.Proxy("PYRONAME:example.warehouse")
@@ -14,8 +24,8 @@ servidor = Pyro4.Proxy("PYRONAME:example.warehouse")
 nome = input("Nome: ")
 pygame.init()
 clock = pygame.time.Clock()
-ALTURA = 600
-LARGURA = 800
+ALTURA = 540
+LARGURA = 790
 AREA = ALTURA*LARGURA
 
 tela = pygame.display.set_mode((LARGURA,ALTURA))
@@ -72,7 +82,13 @@ def colisaoObstaculos():
 # Passar a vez
 foiPego=False
 freezePego=0
-    
+
+# Numero da sorte - Bonus
+numeroSorte = randint(0,50)
+imgBonus = pygame.image.load("imagens/morreu.png")
+imgBonus = pygame.transform.scale(imgBonus, (50,50))
+rectBonus = imgBonus.get_rect()
+
 
 # Personagem
 txtImgLoad = "imagens/feliz.png"
@@ -80,8 +96,8 @@ txtRect = (50,50)
 imgPersonagem = pygame.image.load(txtImgLoad)
 imgPersonagem = pygame.transform.scale(imgPersonagem, txtRect)
 rectPersonagem = imgPersonagem.get_rect()
-rectPersonagem.x=ALTURA/2
-rectPersonagem.y=LARGURA/2
+rectPersonagem.x=1
+rectPersonagem.y=1
 
 id = servidor.conectaPlayer("Mau",txtImgLoad,txtImgLoad,0.0,0.0)
 
@@ -107,7 +123,8 @@ while True:
             rectPersonagem.x=player.getCoordX()
             rectPersonagem.y=player.getCoordY()
             player.setImg(txtImgLoad)
-            servidor.atualizaPlayer(id,playerL) 
+            servidor.atualizaPlayer(id,playerL)
+            tela.blit(imgBonus, rectBonus)
             # Finaliza o jogo
             pygame.quit()
             exit()
@@ -124,12 +141,12 @@ while True:
         
     if player.getStatus() == True and foiPego == False:
         if freezePego < 120:
-            player.setVelocidade(1)
+            player.setVelocidade(3)
             freezePego=freezePego+1
         if freezePego >= 120:
             freezePego=0
             foiPego=True
-            player.setVelocidade(3)
+            player.setVelocidade(5)
  
     
  
@@ -182,6 +199,13 @@ while True:
 
     for obstaculoIR in obstaculosRect:
         tela.blit(obstaculosImg, obstaculoIR)
+        if player.getStatus() == True and servidor.getBonus() == True:
+                if rectPersonagem.colliderect(rectBonus):
+                    player.setVelocidade(7)
+                    servidor.desativarBonus()
+                    nickname = fonte.render(str("COLISAO"), True, (255,0,0))
+                    sfxColisao.play(loops=0, maxtime=0)
+                    tela.blit(nickname, rectPersonagem)
     
        
     for i in range(servidor.getQuantPlayers()):
@@ -203,17 +227,12 @@ while True:
                     playerL[2]=False
                     foiPego=False
                     servidor.setPegador(i)
+            
+
+                    
                     
 
-    if player.getStatus() == True:
-        txtImgLoad="imagens/mau.png"
-        imgPersonagem = pygame.image.load(txtImgLoad)
-        imgPersonagem = pygame.transform.scale(imgPersonagem, txtRect)
-        rectPersonagem = imgPersonagem.get_rect()
-        rectPersonagem.x=player.getCoordX()
-        rectPersonagem.y=player.getCoordY()
-        player.setImg(txtImgLoad)
-        servidor.atualizaPlayer(id,playerL)
+
     if player.getStatus() == True and player.getVelocidade()>5:
         txtImgLoad="imagens/mauTunado.png"
         imgPersonagem = pygame.image.load(txtImgLoad)
@@ -223,6 +242,21 @@ while True:
         rectPersonagem.y=player.getCoordY()
         player.setImg(txtImgLoad)
         servidor.atualizaPlayer(id,playerL)
+    elif player.getStatus() == True:
+        txtImgLoad="imagens/mau.png"
+        imgPersonagem = pygame.image.load(txtImgLoad)
+        imgPersonagem = pygame.transform.scale(imgPersonagem, txtRect)
+        rectPersonagem = imgPersonagem.get_rect()
+        rectPersonagem.x=player.getCoordX()
+        rectPersonagem.y=player.getCoordY()
+        player.setImg(txtImgLoad)
+        servidor.atualizaPlayer(id,playerL)
+        if servidor.getBonus() == False:
+            numAux = randint(0,50)
+            if numeroSorte == numAux:
+                servidor.ativarBonus()
+
+    
     if player.getStatus() == False:
         txtImgLoad="imagens/feliz.png"
         imgPersonagem = pygame.image.load(txtImgLoad)
@@ -231,6 +265,7 @@ while True:
         rectPersonagem.x=player.getCoordX()
         rectPersonagem.y=player.getCoordY()
         player.setImg(txtImgLoad)
+        player.setVelocidade(5)
         servidor.atualizaPlayer(id,playerL)
     if player.getVidas() == 0:
         txtImgLoad="imagens/morreu.png"
@@ -243,6 +278,12 @@ while True:
         servidor.atualizaPlayer(id,playerL)
 
     tela.blit(imgPersonagem, rectPersonagem)
+
+    if servidor.getBonus() == True:
+        cordBonus = servidor.getCordBonus()
+        rectBonus.x = cordBonus[0]
+        rectBonus.y = cordBonus[1]
+        tela.blit(imgBonus, rectBonus)
 
     # Mostrar vidas
     score = fonte2.render ("Vidas: " + str(player.getVidas()), True, (255, 255, 255))

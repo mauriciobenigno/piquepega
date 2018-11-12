@@ -1,6 +1,7 @@
 import sys
 import json
 import numpy as np
+from random import randint
 from player import Player
         
 import Pyro4
@@ -15,16 +16,20 @@ class Servidor(object):
         self.obstaculos=list()
         # paredes
         self.idPegador=None
-        #self.obstaculos.append()
+        # Bonus
+        self.bonus=False
+        self.cordBonus= list()
+        self.cordBonus.append(0.0)
+        self.cordBonus.append(0.0)
 
         # obstaculos
-        self.obstaculos.append((72,91))
-        self.obstaculos.append((72,196))
-        self.obstaculos.append((72,265))
-        self.obstaculos.append((72,370))
-        self.obstaculos.append((72,475))
-        self.obstaculos.append((177,475))
-        self.obstaculos.append((177,337))
+        valX = 60
+        valY = 60
+        for i in range(12):
+            for k in range(8):
+                if i%2 != 0 and k%2 !=0:
+                    self.obstaculos.append((valX*(i),valY*(k)))
+            
 
         # mensagem ok
         print("Servidor Iniciado!")
@@ -62,6 +67,37 @@ class Servidor(object):
 
     def setPegador(self,idP):
         self.idPegador=idP
+
+    def ativarBonus(self):
+        self.bonus=True
+        valX = 60
+        valY = 60
+        numSorteado = randint(0,48)
+        contador = 0
+        print("Bonus num "+str(numSorteado))
+        for i in range(12):
+            for k in range(8):
+                if i%2 == 0 and k%2 ==0:
+                    print("contador = "+str(contador))
+                    if contador == numSorteado:
+                        self.cordBonus[0]=(valX*(i))
+                        self.cordBonus[1]=(valY*(k))
+                        print("Novo cord X "+str(self.cordBonus[0])+" Y "+str(self.cordBonus[1]))
+                        break
+                    else:
+                        contador= contador+1
+            if contador == numSorteado:
+                break
+                        
+        
+    def desativarBonus(self):
+        self.bonus=False
+
+    def getBonus(self):
+        return self.bonus
+
+    def getCordBonus(self):
+        return self.cordBonus
         
 
    
