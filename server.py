@@ -3,6 +3,7 @@ import json
 import numpy as np
 from random import randint
 from player import Player
+from random import *
         
 import Pyro4
 import Pyro4.naming
@@ -18,9 +19,11 @@ class Servidor(object):
         self.idPegador=None
         # Bonus
         self.bonus=False
-        self.cordBonus= list()
+        self.cordBonus=list()
         self.cordBonus.append(0.0)
         self.cordBonus.append(0.0)
+        self.numConnectados=0
+        self.desconectados=list()
 
         # obstaculos
         valX = 60
@@ -29,15 +32,48 @@ class Servidor(object):
             for k in range(8):
                 if i%2 != 0 and k%2 !=0:
                     self.obstaculos.append((valX*(i),valY*(k)))
-            
-
         # mensagem ok
         print("Servidor Iniciado!")
 
     def conectaPlayer(self,nome,txtImg,txtCord,coordX,coordY):
         player = Player(nome,len(self.players),txtImg,txtCord,coordX,coordY)
         self.players.append(player)
+        self.numConnectados=self.numConnectados+1
+        if self.idPegador == None:
+            if self.numConnectados >= 3:
+                # Sorteia um novo pegador
+                self.sorteiaPegador()
+        
         return player.getID()
+
+    def disconectPlayer(self,id):
+        print("JOGADOR DISCONECTADO")
+        for player in self.players:
+            if player.getID()==id:
+                print("JOGADOR ENCONTRADOR")
+                player.setImg("imagens/morreu.png")
+                player.setVidas(0)
+                player.setStatus(False)
+                if id == self.idPegador:
+                    self.idPegador=None
+                    # Sorteia um novo pegador
+                    self.sorteiaPegador()
+        
+  
+
+    def sorteiaPegador(self):
+        status = False
+        achou = False
+        while status == False:
+            numero = randint(0,self.numConnectados)
+            for i in range(len(self.desconectados)):
+                if numero == self.desconectados[i]:
+                    achou = True
+                    break
+            if achou == False:
+                self.idPegador = numero
+                status = True
+                print("Novo pegador sorteado eh: "+str(numero))
 
     def getPlayer(self,id):
         for player in self.players:
@@ -78,7 +114,6 @@ class Servidor(object):
         for i in range(12):
             for k in range(8):
                 if i%2 == 0 and k%2 ==0:
-                    print("contador = "+str(contador))
                     if contador == numSorteado:
                         self.cordBonus[0]=(valX*(i))
                         self.cordBonus[1]=(valY*(k))

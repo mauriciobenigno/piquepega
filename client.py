@@ -11,8 +11,6 @@ from random import randint
 2 - Player amarelo deleta o bonus do player vermelho
 3 - Player que desconecta, vira morto
 4 - Player pegador que desconecta, sorteia novo pegador
-5 - Mudar nome pegador para infectado
-6 - criar imagem de cerebro para bonus
 
 '''
 #sys.excepthook = Pyro4.util.excepthook
@@ -46,7 +44,8 @@ pygame.mixer.music.play(loops = -1)
 sfxColisao = pygame.mixer.Sound("sons/beep_02.wav")
 
 # Tela de fundo
-imgBackGround =  pygame.image.load("imagens/gramado.jpg")
+#imgBackGround =  pygame.image.load("imagens/gramado.jpg")
+imgBackGround =  pygame.image.load("imagens/chao.jpg")
 rectBackGround = imgBackGround.get_rect()
 
 # Paredes
@@ -85,7 +84,7 @@ freezePego=0
 
 # Numero da sorte - Bonus
 numeroSorte = randint(0,50)
-imgBonus = pygame.image.load("imagens/morreu.png")
+imgBonus = pygame.image.load("imagens/bonus.png")
 imgBonus = pygame.transform.scale(imgBonus, (50,50))
 rectBonus = imgBonus.get_rect()
 
@@ -115,6 +114,8 @@ servidor.atualizaPlayer(id,player.getTudo())
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            # Servidor
+            servidor.disconectPlayer(id)
             # Morre pro resto do servidor
             txtImgLoad="imagens/morreu.png"
             imgPersonagem = pygame.image.load(txtImgLoad)
@@ -213,6 +214,9 @@ while True:
             oPlayers = servidor.getPlayer(i)
             imgJog = pygame.image.load(oPlayers[5])
             imgJog = pygame.transform.scale(imgJog,txtRect)
+            if oPlayers[3] == 0:
+                imgJog = pygame.image.load("imagens/morreu.png")
+                imgJog = pygame.transform.scale(imgJog,txtRect)
             rectJogs = imgJog.get_rect()
             rectJogs.x=oPlayers[7]
             rectJogs.y=oPlayers[8]
