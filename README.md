@@ -1,6 +1,4 @@
 # piquepega
-*** Em desenvolvimento ***
-
 
 Trabalho Sistemas Distribuídos
 
