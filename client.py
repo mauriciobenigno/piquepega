@@ -5,14 +5,7 @@ import server
 from server import Servidor
 from player import Player
 from random import randint
-'''
-->Adicionar<-
-1 - Ao passar por cima de um corpo morto, ficar lento até sair dele
-2 - Player amarelo deleta o bonus do player vermelho
-3 - Player que desconecta, vira morto
-4 - Player pegador que desconecta, sorteia novo pegador
 
-'''
 #sys.excepthook = Pyro4.util.excepthook
 
 servidor = Pyro4.Proxy("PYRONAME:example.warehouse")
@@ -109,7 +102,12 @@ player = Player(playerL[0],playerL[1],playerL[5],playerL[6],playerL[7],playerL[8
 
 servidor.atualizaPlayer(id,player.getTudo())
 
-
+# Joystick
+joy = pygame.joystick.Joystick(0) 
+joy.joystick.init()
+joyInit = pygame.joystick.get_init()
+x_axys_anterior = 0
+y_axys_anterior = 0
 
 while True:
     for event in pygame.event.get():
@@ -126,11 +124,30 @@ while True:
             player.setImg(txtImgLoad)
             servidor.atualizaPlayer(id,playerL)
             tela.blit(imgBonus, rectBonus)
+            # Finaliza a conexão com o Joystick
+            pygame.joystick.quit()
             # Finaliza o jogo
             pygame.quit()
             exit()
-            
-
+        # Capta interação com Joystick 
+        elif event.type == pygame.JOYAXISMOTION:
+            x , y = joy.get_axis(0), joy.get_axis(1)
+            if tecla[pygame.K_d] and x_axys_anterior <= x:
+                rectPersonagem.move_ip(player.getVelocidade(), 0)
+                if colisaoParede(rectPersonagem.x,rectPersonagem.y) or colisaoObstaculos():
+                    rectPersonagem.move_ip(-player.getVelocidade(), 0)
+            if tecla[pygame.K_a] and x_axys_anterior >= x:
+                rectPersonagem.move_ip(-player.getVelocidade(), 0)
+                if colisaoParede(rectPersonagem.x,rectPersonagem.y) or colisaoObstaculos():
+                    rectPersonagem.move_ip(player.getVelocidade(), 0)
+            if tecla[pygame.K_w] and y_axys_anterior <= y:
+                rectPersonagem.move_ip(0, -player.getVelocidade())
+                if colisaoParede(rectPersonagem.x,rectPersonagem.y) or colisaoObstaculos():
+                    rectPersonagem.move_ip(0, player.getVelocidade())
+            if tecla[pygame.K_s] and y_axys_anterior >= y:
+                rectPersonagem.move_ip(0, player.getVelocidade())
+                if colisaoParede(rectPersonagem.x,rectPersonagem.y) or colisaoObstaculos():
+                    rectPersonagem.move_ip(0, -player.getVelocidade()) 
             
     # Se atualiza com informações do player no servidor
     playerL = servidor.getPlayer(id)
